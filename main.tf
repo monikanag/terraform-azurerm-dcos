@@ -140,37 +140,33 @@ module "dcos-infrastructure" {
 /////////////////////////////////////////
 
 module "dcos-core" {
-  source  = "dcos-terraform/dcos-install-remote-exec/null"
-  version = "~> 0.1.0"
+  source = "git::https://github.com/dcos-terraform/terraform-null-dcos-install-remote-exec.git?ref=gracedo/enable_mesos_input_plugin_config_option"
+
+  // version = "~> 0.1.0"
 
   # bootstrap
   bootstrap_ip         = "${module.dcos-infrastructure.bootstrap.public_ip}"
   bootstrap_private_ip = "${module.dcos-infrastructure.bootstrap.private_ip}"
   bootstrap_os_user    = "${module.dcos-infrastructure.bootstrap.admin_username}"
   bootstrap_prereq-id  = "${module.dcos-infrastructure.bootstrap.prereq_id}"
-
   # master
   master_ips         = ["${module.dcos-infrastructure.masters.public_ips}"]
   master_private_ips = ["${module.dcos-infrastructure.masters.private_ips}"]
   masters_os_user    = "${module.dcos-infrastructure.masters.admin_username}"
   masters_prereq-id  = "${module.dcos-infrastructure.masters.prereq_id}"
   num_masters        = "${var.num_masters}"
-
   # private agent
   private_agent_ips        = ["${module.dcos-infrastructure.private_agents.public_ips}"]
   private_agents_os_user   = "${module.dcos-infrastructure.private_agents.admin_username}"
   private_agents_prereq-id = "${module.dcos-infrastructure.private_agents.prereq_id}"
   num_private_agents       = "${var.num_private_agents}"
-
   # public agent
   public_agent_ips        = ["${module.dcos-infrastructure.public_agents.public_ips}"]
   public_agents_os_user   = "${module.dcos-infrastructure.public_agents.admin_username}"
   public_agents_prereq-id = "${module.dcos-infrastructure.public_agents.prereq_id}"
   num_public_agents       = "${var.num_public_agents}"
-
   # DC/OS options
-  dcos_cluster_name = "${coalesce(var.dcos_cluster_name, var.cluster_name)}"
-
+  dcos_cluster_name                            = "${coalesce(var.dcos_cluster_name, var.cluster_name)}"
   custom_dcos_download_path                    = "${var.custom_dcos_download_path}"
   dcos_adminrouter_tls_1_0_enabled             = "${var.dcos_adminrouter_tls_1_0_enabled}"
   dcos_adminrouter_tls_1_1_enabled             = "${var.dcos_adminrouter_tls_1_1_enabled}"
@@ -268,4 +264,5 @@ module "dcos-core" {
   dcos_zk_agent_credentials                    = "${var.dcos_zk_agent_credentials}"
   dcos_zk_master_credentials                   = "${var.dcos_zk_master_credentials}"
   dcos_zk_super_credentials                    = "${var.dcos_zk_super_credentials}"
+  dcos_enable_mesos_input_plugin               = "${var.dcos_enable_mesos_input_plugin}"
 }
